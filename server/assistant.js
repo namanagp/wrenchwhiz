@@ -97,7 +97,7 @@ If the job is dangerous for amateurs (airbags, high-voltage, fuel lines, A/C ref
     } catch (e) { console.warn('[llm] guide fallback:', e.message); }
   }
   if (kbId) return { ...getGuide(kbId, p, mode), note: `Closest curated guide for "${topic}". Custom AI-generated guides turn on when an API key is added.` };
-  return { notFound: true, message: `No curated guide matches "${topic}" yet. Custom AI-generated guides for any repair activate when an OpenAI or Anthropic API key is added.`, available: listGuides(p) };
+  return { notFound: true, message: `No curated guide matches "${topic}" yet. Custom AI-generated guides for any repair activate when an OpenRouter, OpenAI or Anthropic API key is added.`, available: listGuides(p) };
 }
 
 // ---------- Chat ----------
@@ -175,7 +175,7 @@ Rules: Be specific to this vehicle where you're confident and say when something
     } catch (e) { console.warn('[llm] chat fallback:', e.message); }
   }
   const rb = ruleBasedChat(last, p, mode, context);
-  return { ...rb, source: 'curated', note: llm.isEnabled() ? 'The AI provider could not be reached, so this answer comes from the built-in knowledge base.' : 'Offline mode: answers come from the built-in knowledge base. Full conversational AI activates when an OpenAI or Anthropic API key is added.' };
+  return { ...rb, source: 'curated', note: llm.isEnabled() ? 'The AI provider could not be reached, so this answer comes from the built-in knowledge base.' : 'Offline mode: answers come from the built-in knowledge base. Full conversational AI activates when an OpenRouter, OpenAI or Anthropic API key is added.' };
 }
 
 export { buildProfile, buildSchedule, listGuides, getGuide, PRICE_DISCLAIMER };

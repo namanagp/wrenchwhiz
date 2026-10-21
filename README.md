@@ -40,10 +40,13 @@ The app works **fully without a key** using its built-in knowledge base. To turn
 
 ```bash
 cp .env.example .env
-# then set ONE of:
-OPENAI_API_KEY=sk-...        # optional OPENAI_MODEL (default gpt-4o-mini), OPENAI_BASE_URL for compatible APIs
-ANTHROPIC_API_KEY=sk-ant-... # optional ANTHROPIC_MODEL (default claude-haiku-4-5)
+# then set ONE of (OpenRouter is preferred when several are set):
+OPENROUTER_API_KEY=sk-or-...  # optional OPENROUTER_MODEL (default openai/gpt-4.1-mini), OPENROUTER_SITE_URL / OPENROUTER_APP_NAME
+OPENAI_API_KEY=sk-...         # optional OPENAI_MODEL (default gpt-4o-mini), OPENAI_BASE_URL for compatible APIs
+ANTHROPIC_API_KEY=sk-ant-...  # optional ANTHROPIC_MODEL (default claude-haiku-4-5)
 ```
+
+Keys can also come from real environment variables (these override `.env`). Use `LLM_PROVIDER=openrouter|openai|anthropic` to force a provider. With [OpenRouter](https://openrouter.ai), one key unlocks hundreds of models; change `OPENROUTER_MODEL` to any ID from `https://openrouter.ai/api/v1/models`. The app sends the optional `HTTP-Referer` and `X-Title` attribution headers.
 
 Restart the server. The header badge switches from "📚 Offline mode" to "✨ AI".
 
@@ -62,7 +65,7 @@ If an AI call fails, every feature falls back to the knowledge base automaticall
 - **Frontend:** React 19 + Vite, hand-written CSS (dark glassmorphism theme, responsive with a mobile bottom tab bar). No UI framework.
 - **Backend:** Node.js + Express 5, one process that serves the API and the built frontend.
 - **Data:** [NHTSA vPIC](https://vpic.nhtsa.dot.gov/api/) (makes, models, VIN decode), [NHTSA Recalls & Complaints](https://www.nhtsa.gov/nhtsa-datasets-and-apis) (cached in memory for 12h).
-- **AI layer:** `server/llm.js`, a small provider-agnostic adapter (OpenAI Chat Completions or Anthropic Messages via `fetch`, with JSON-mode for structured output). It picks a provider from env vars, so adding another provider means adding one object.
+- **AI layer:** `server/llm.js`, a small provider-agnostic adapter: one shared OpenAI-compatible client (used for OpenRouter and OpenAI) plus Anthropic Messages, all via `fetch`, with JSON-mode for structured output. It picks a provider from env vars, so adding another provider means adding one object.
 - **Knowledge base:** `server/kb/`
   - `profile.js` builds a vehicle profile from year/make/model (body type, EV/hybrid, luxury, timing belt vs chain, likely CVT, AWD, cost multiplier)
   - `maintenance.js`, `symptoms.js`, `guides.js`, `prices.js` are curated content adapted to that profile

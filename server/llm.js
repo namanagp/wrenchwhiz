@@ -1,27 +1,47 @@
 // Pluggable LLM layer. Picks a provider from environment variables:
-//   LLM_PROVIDER=openai|anthropic (optional; auto-detects otherwise)
+//   LLM_PROVIDER=openrouter|openai|anthropic (optional; auto-detects otherwise,
+//     preferring OpenRouter > OpenAI > Anthropic)
+//   OPENROUTER_API_KEY (+ optional OPENROUTER_MODEL, default openai/gpt-4.1-mini,
+//     OPENROUTER_BASE_URL, OPENROUTER_SITE_URL -> HTTP-Referer, OPENROUTER_APP_NAME -> X-Title)
 //   OPENAI_API_KEY (+ optional OPENAI_MODEL, default gpt-4o-mini)
 //   ANTHROPIC_API_KEY (+ optional ANTHROPIC_MODEL, default claude-haiku-4-5)
 // If no key is configured, isEnabled() returns false and callers fall back to
 // the curated knowledge base.
 
+// Shared client for any OpenAI-compatible Chat Completions API (OpenAI, OpenRouter, ...).
+async function openAICompatible({ label, baseUrl, key, model, extraHeaders = {} }, { system, messages, json, maxTokens }) {
+  const res = await fetch(`${baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}`, ...extraHeaders },
+    body: JSON.stringify({
+      model, max_tokens: maxTokens, temperature: 0.3,
+      messages: [{ role: 'system', content: system }, ...messages],
+      ...(json ? { response_format: { type: 'json_object' } } : {}),
+    }),
+  });
+  if (!res.ok) throw new Error(`${label} ${res.status}: ${(await res.text()).slice(0, 300)}`);
+  const data = await res.json();
+  if (data.error) throw new Error(`${label}: ${data.error.message || JSON.stringify(data.error).slice(0, 300)}`);
+  return data.choices?.[0]?.message?.content || '';
+}
+
 const providers = {
+  openrouter: {
+    key: () => process.env.OPENROUTER_API_KEY,
+    model: () => process.env.OPENROUTER_MODEL || 'openai/gpt-4.1-mini',
+    complete(opts) {
+      const extraHeaders = {
+        'HTTP-Referer': process.env.OPENROUTER_SITE_URL || 'http://localhost:5180',
+        'X-Title': process.env.OPENROUTER_APP_NAME || 'WrenchWise',
+      };
+      return openAICompatible({ label: 'OpenRouter', baseUrl: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1', key: this.key(), model: this.model(), extraHeaders }, opts);
+    },
+  },
   openai: {
     key: () => process.env.OPENAI_API_KEY,
     model: () => process.env.OPENAI_MODEL || 'gpt-4o-mini',
-    async complete({ system, messages, json, maxTokens }) {
-      const res = await fetch(`${process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'}/chat/completions`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.key()}` },
-        body: JSON.stringify({
-          model: this.model(), max_tokens: maxTokens, temperature: 0.3,
-          messages: [{ role: 'system', content: system }, ...messages],
-          ...(json ? { response_format: { type: 'json_object' } } : {}),
-        }),
-      });
-      if (!res.ok) throw new Error(`OpenAI ${res.status}: ${(await res.text()).slice(0, 300)}`);
-      const data = await res.json();
-      return data.choices?.[0]?.message?.content || '';
+    complete(opts) {
+      return openAICompatible({ label: 'OpenAI', baseUrl: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1', key: this.key(), model: this.model() }, opts);
     },
   },
   anthropic: {
@@ -47,6 +67,7 @@ const providers = {
 export function activeProvider() {
   const forced = (process.env.LLM_PROVIDER || '').toLowerCase();
   if (forced && providers[forced]?.key()) return forced;
+  if (process.env.OPENROUTER_API_KEY) return 'openrouter';
   if (process.env.OPENAI_API_KEY) return 'openai';
   if (process.env.ANTHROPIC_API_KEY) return 'anthropic';
   return null;

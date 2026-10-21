@@ -10,7 +10,8 @@
     "dev": "concurrently -k -n api,web \"node --watch server/index.js\" \"vite\"",
     "build": "vite build",
     "test": "node scripts/smoke-test.mjs",
-    "screenshots": "node scripts/screenshots.mjs"
+    "screenshots": "node scripts/screenshots.mjs",
+    "screenshots:ai": "node scripts/screenshots-ai.mjs"
   },
   "engines": {
     "node": ">=18"

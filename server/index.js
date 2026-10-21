@@ -99,5 +99,5 @@ const PORT = Number(process.env.PORT) || 5180;
 app.listen(PORT, () => {
   const ai = llm.providerInfo();
   console.log(`WrenchWise running at http://localhost:${PORT}`);
-  console.log(ai.enabled ? `AI: ${ai.provider} (${ai.model})` : 'AI: off (no OPENAI_API_KEY / ANTHROPIC_API_KEY) - using built-in knowledge base');
+  console.log(ai.enabled ? `AI: ${ai.provider} (${ai.model})` : 'AI: off (no OPENROUTER_API_KEY / OPENAI_API_KEY / ANTHROPIC_API_KEY) - using built-in knowledge base');
 });
