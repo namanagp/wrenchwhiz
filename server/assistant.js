@@ -63,7 +63,9 @@ ${vehicleContext(p)}
 Return JSON: {"summary": string, "urgency": "safe"|"soon"|"stop", "causes": [{"name": string, "likelihood": integer percent (all sum ~100), "why": string, "diy": boolean, "jobId": one of [${Object.keys(JOBS).join(', ')}] or null}], "checks": [string], "advice": string}.
 Rank 3-5 causes. Be conservative with urgency for brakes, steering, overheating, fuel smell, smoke. Never invent recalls or statistics.`;
       const ai = await llm.completeJSON({ system, messages: [{ role: 'user', content: `Symptom: ${text}` }], maxTokens: 900 });
-      const urgency = ['safe', 'soon', 'stop'].includes(ai.urgency) ? ai.urgency : (kb?.urgency || 'soon');
+      let urgency = ['safe', 'soon', 'stop'].includes(ai.urgency) ? ai.urgency : (kb?.urgency || 'soon');
+      // Safety floor: never let the AI rate a symptom less urgent than the curated knowledge base does.
+      if (kb && URGENCY_RANK[kb.urgency] > URGENCY_RANK[urgency]) urgency = kb.urgency;
       return {
         source: 'ai', provider: llm.providerInfo(), urgency, urgencyLabel: URGENCY_LABEL[urgency], summary: ai.summary, checks: ai.checks || [], advice: ai.advice,
         causes: (ai.causes || []).slice(0, 5).map((c) => ({ name: c.name, likelihood: c.likelihood, why: c.why, diy: !!c.diy, fix: c.diy ? 'DIY possible' : 'Shop recommended',
