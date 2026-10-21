@@ -139,7 +139,7 @@ export function buildSchedule(profile, currentMileage = 0, mode = 'beginner') {
   });
 
   // Milestone timeline (what happens at each major visit)
-  const marks = [5000, 15000, 30000, 60000, 90000, 100000, 120000, 150000];
+  const marks = [7500, 15000, 30000, 45000, 60000, 90000, 100000, 120000, 150000];
   const milestones = marks.map((m, idx) => {
     const prev = idx === 0 ? 0 : marks[idx - 1];
     return { miles: m, items: items.filter((i) => Math.floor(m / i.miles) > Math.floor(prev / i.miles)).map((i) => i.name) };
