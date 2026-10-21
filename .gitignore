@@ -1,4 +1,19 @@
+# dependencies & build output
 node_modules/
 dist/
+
+# secrets
 .env
+.env.*
+!.env.example
+
+# logs & runtime
 *.log
+server.log
+npm-debug.log*
+logs/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
