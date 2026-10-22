@@ -8,7 +8,7 @@ const STARTERS = {
 };
 
 export default function Chat({ vehicle, mode, profile, ai, mileage, recalls, go }) {
-  const key = `ww-chat-${vehicle.year}-${vehicle.make}-${vehicle.model}`;
+  const key = `ml-chat-${vehicle.year}-${vehicle.make}-${vehicle.model}`;
   const [messages, setMessages] = useState(() => { try { return JSON.parse(sessionStorage.getItem(key)) || []; } catch { return []; } });
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);

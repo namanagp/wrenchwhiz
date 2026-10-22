@@ -11,7 +11,7 @@ const browser = await chromium.launch({ executablePath: exe, args: ['--no-sandbo
 const civic = 'y=2015&mk=Honda&md=Civic&t=car';
 async function open(hash) {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1.5 });
-  await ctx.addInitScript(() => { if (!sessionStorage.getItem('init')) { localStorage.clear(); localStorage.setItem('ww-mileage', '59200'); sessionStorage.setItem('init', '1'); } });
+  await ctx.addInitScript(() => { if (!sessionStorage.getItem('init')) { localStorage.clear(); localStorage.setItem('ml-mileage', '59200'); sessionStorage.setItem('init', '1'); } });
   const p = await ctx.newPage();
   p.setDefaultTimeout(90000);
   await p.goto(`${BASE}/#${hash}`, { waitUntil: 'networkidle' });

@@ -27,10 +27,10 @@ function readHash() {
 
 export default function App() {
   const fromHash = readHash();
-  const [vehicle, setVehicle] = useState(fromHash.vehicle || load('ww-vehicle', null));
-  const [mode, setMode] = useState(fromHash.mode || load('ww-mode', 'beginner'));
+  const [vehicle, setVehicle] = useState(fromHash.vehicle || load('ml-vehicle', null));
+  const [mode, setMode] = useState(fromHash.mode || load('ml-mode', 'beginner'));
   const [tab, setTab] = useState(fromHash.tab || 'overview');
-  const [mileage, setMileage] = useState(load('ww-mileage', 0));
+  const [mileage, setMileage] = useState(load('ml-mileage', 0));
   const [profile, setProfile] = useState(null);
   const [ai, setAi] = useState(null);
   const [guideId, setGuideId] = useState(fromHash.guide || null);
@@ -40,10 +40,10 @@ export default function App() {
   const [changing, setChanging] = useState(false);
 
   useEffect(() => { api.health().then((h) => setAi(h.ai)).catch(() => {}); }, []);
-  useEffect(() => { localStorage.setItem('ww-mode', JSON.stringify(mode)); }, [mode]);
-  useEffect(() => { localStorage.setItem('ww-mileage', JSON.stringify(mileage)); }, [mileage]);
+  useEffect(() => { localStorage.setItem('ml-mode', JSON.stringify(mode)); }, [mode]);
+  useEffect(() => { localStorage.setItem('ml-mileage', JSON.stringify(mileage)); }, [mileage]);
   useEffect(() => {
-    localStorage.setItem('ww-vehicle', JSON.stringify(vehicle));
+    localStorage.setItem('ml-vehicle', JSON.stringify(vehicle));
     setProfile(null); setRecalls(null);
     if (vehicle) {
       api.profile(vehicle).then(setProfile).catch(() => {});
@@ -75,7 +75,7 @@ export default function App() {
         <header className="topbar"><Brand />{ModeToggle}</header>
         <main className="landing-main">
           <section className="hero">
-            <p className="eyebrow">Your car repair companion</p>
+            <p className="eyebrow">Learn your car's language</p>
             <h1>Know your car.<br /><span className="grad">Skip the upsell.</span></h1>
             <p className="hero-sub">Pick your car and get a maintenance schedule, a symptom checker, step-by-step DIY guides, fair price ranges and a mechanic you can ask anything, all tuned to your exact year, make and model.</p>
           </section>
@@ -136,7 +136,7 @@ function Brand({ onClick }) {
   return (
     <button className="brand" onClick={onClick}>
       <img src="/favicon.svg" alt="" width="30" height="30" />
-      <span>Wrench<span className="grad">Wise</span></span>
+      <span>Motor<span className="grad">lingo</span></span>
     </button>
   );
 }

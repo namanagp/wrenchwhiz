@@ -12,7 +12,7 @@ async function page({ hash = '', mileage = 0, mobile = false } = {}) {
   const ctx = await browser.newContext(mobile
     ? { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }
     : { viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1.5 });
-  await ctx.addInitScript((m) => { if (!sessionStorage.getItem('init')) { localStorage.clear(); localStorage.setItem('ww-mileage', String(m)); sessionStorage.setItem('init', '1'); } }, mileage);
+  await ctx.addInitScript((m) => { if (!sessionStorage.getItem('init')) { localStorage.clear(); localStorage.setItem('ml-mileage', String(m)); sessionStorage.setItem('init', '1'); } }, mileage);
   const p = await ctx.newPage();
   await p.goto(`${BASE}/${hash}`, { waitUntil: 'networkidle' });
   return p;

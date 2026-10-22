@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="public/favicon.svg" width="72" alt="WrenchWise logo" />
+<img src="public/favicon.svg" width="72" alt="Motorlingo logo" />
 
-# WrenchWise
+# Motorlingo
 
-**Know your car. Skip the upsell.**
+**Learn your car's language.** Know your car, skip the upsell.
 
 A car repair companion for people who don't know much about cars, and for beginners who want to learn to fix their own.
 Pick any year, make and model and get a maintenance schedule, a symptom checker, step-by-step DIY guides, fair price estimates, live safety recalls and an AI mechanic that already knows which car you drive.
@@ -16,13 +16,13 @@ Pick any year, make and model and get a maintenance schedule, a symptom checker,
 ![Data](https://img.shields.io/badge/Data-NHTSA-1f6feb)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-<img src="screenshots/01-home-picker.png" width="860" alt="WrenchWise home screen with year/make/model picker" />
+<img src="screenshots/01-home-picker.png" width="860" alt="Motorlingo home screen with year/make/model picker" />
 
 </div>
 
 ## Why I built it
 
-Most people who walk into a repair shop can't tell if a $650 brake quote is fair, if a noise means "stop driving now", or if they could do the job themselves in 20 minutes. WrenchWise turns public vehicle data and curated mechanic knowledge into plain-English answers for your exact car. It also helps you learn: a **DIY mode** switches every screen to tools, parts, specs and step-by-step instructions.
+Most people who walk into a repair shop can't tell if a $650 brake quote is fair, if a noise means "stop driving now", or if they could do the job themselves in 20 minutes. Motorlingo turns public vehicle data and curated mechanic knowledge into plain-English answers for your exact car. It also helps you learn: a **DIY mode** switches every screen to tools, parts, specs and step-by-step instructions.
 
 ## Features
 
@@ -80,8 +80,8 @@ React (Vite) SPA  ──►  Express API  ──┬──►  NHTSA APIs (vPIC m
 Requires **Node.js 18+**.
 
 ```bash
-git clone https://github.com/namanagp/wrenchwise.git
-cd wrenchwise
+git clone https://github.com/namanagp/motorlingo.git
+cd motorlingo
 npm install
 npm start        # builds the frontend and serves everything at http://localhost:5180
 ```
@@ -101,7 +101,7 @@ Copy `.env.example` to `.env` and set **one** key. Real environment variables ov
 |---|---|---|
 | `OPENROUTER_API_KEY` | Enables AI via OpenRouter (preferred when several keys are set) | none |
 | `OPENROUTER_MODEL` | Any model ID from `https://openrouter.ai/api/v1/models` | `openai/gpt-4.1-mini` |
-| `OPENROUTER_SITE_URL` / `OPENROUTER_APP_NAME` | Sent as `HTTP-Referer` / `X-Title` attribution headers | `http://localhost:5180` / `WrenchWise` |
+| `OPENROUTER_SITE_URL` / `OPENROUTER_APP_NAME` | Sent as `HTTP-Referer` / `X-Title` attribution headers | `http://localhost:5180` / `Motorlingo` |
 | `OPENAI_API_KEY`, `OPENAI_MODEL`, `OPENAI_BASE_URL` | OpenAI or any OpenAI-compatible API | `gpt-4o-mini` |
 | `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL` | Anthropic | `claude-haiku-4-5` |
 | `LLM_PROVIDER` | Force `openrouter`, `openai` or `anthropic` | auto |
@@ -130,7 +130,7 @@ Copy `.env.example` to `.env` and set **one** key. Real environment variables ov
 - Timing belt/chain and CVT detection uses a rules table for popular models. AI answers can be wrong, and the app labels them clearly.
 - Some trim-specific model names may not match NHTSA's recall data. Check your VIN at [nhtsa.gov/recalls](https://www.nhtsa.gov/recalls).
 
-> ⚠️ **WrenchWise gives general guidance, not a professional inspection.** For brakes, steering, suspension, tires, fuel systems, airbags and high-voltage EV components, consult a qualified mechanic. Use at your own risk.
+> ⚠️ **Motorlingo gives general guidance, not a professional inspection.** For brakes, steering, suspension, tires, fuel systems, airbags and high-voltage EV components, consult a qualified mechanic. Use at your own risk.
 
 ## License
 
