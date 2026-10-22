@@ -8,10 +8,15 @@
 // If no key is configured, isEnabled() returns false and callers fall back to
 // the curated knowledge base.
 
+// Abort slow LLM calls so callers fall back to the knowledge base well before
+// the 60s Vercel function limit (override with LLM_TIMEOUT_MS).
+const LLM_TIMEOUT_MS = Number(process.env.LLM_TIMEOUT_MS) || 45000;
+
 // Shared client for any OpenAI-compatible Chat Completions API (OpenAI, OpenRouter, ...).
 async function openAICompatible({ label, baseUrl, key, model, extraHeaders = {} }, { system, messages, json, maxTokens }) {
   const res = await fetch(`${baseUrl.replace(/\/+$/, '')}/chat/completions`, {
     method: 'POST',
+    signal: AbortSignal.timeout(LLM_TIMEOUT_MS),
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}`, ...extraHeaders },
     body: JSON.stringify({
       model, max_tokens: maxTokens, temperature: 0.3,
@@ -31,7 +36,7 @@ const providers = {
     model: () => process.env.OPENROUTER_MODEL || 'openai/gpt-4.1-mini',
     complete(opts) {
       const extraHeaders = {
-        'HTTP-Referer': process.env.OPENROUTER_SITE_URL || 'http://localhost:5180',
+        'HTTP-Referer': process.env.OPENROUTER_SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'http://localhost:5180'),
         'X-Title': process.env.OPENROUTER_APP_NAME || 'WrenchWhiz',
       };
       return openAICompatible({ label: 'OpenRouter', baseUrl: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1', key: this.key(), model: this.model(), extraHeaders }, opts);
@@ -49,6 +54,7 @@ const providers = {
     model: () => process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5',
     async complete({ system, messages, json, maxTokens }) {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
+        signal: AbortSignal.timeout(LLM_TIMEOUT_MS),
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': this.key(), 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({

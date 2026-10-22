@@ -115,6 +115,32 @@ Copy `.env.example` to `.env` and set **one** key. Real environment variables ov
 | DIY guides | ✅ 10 curated | ✅ plus AI-generated guides for any repair |
 | Chat | ✅ rule-based answers | ✅ full conversational mechanic |
 
+## Deploy on Vercel
+
+WrenchWhiz is ready for [Vercel](https://vercel.com) with no code changes:
+
+- **Frontend**: Vercel builds the Vite app (`vite build`) and serves `dist/` from its CDN.
+- **API**: `api/index.js` exports the Express app (`server/app.js`) as a single Vercel Function. `vercel.json` sends every `/api/*` request to it and gives it up to 60s (`maxDuration`) for AI calls.
+- **SPA routing**: every other path falls back to `index.html`.
+- **No disk writes**: the server keeps nothing on disk at runtime. The knowledge base is plain JS modules in `server/kb/`, so it's bundled with the function automatically.
+
+Steps:
+
+1. Import `namanagp/wrenchwhiz` at [vercel.com/new](https://vercel.com/new) (or run `npx vercel` in the repo). The settings come from `vercel.json`.
+2. Add environment variables under **Project → Settings → Environment Variables**:
+
+   | Variable | Required? | Notes |
+   |---|---|---|
+   | `OPENROUTER_API_KEY` | Recommended | Turns on the AI mechanic. Without it the app runs on the built-in knowledge base. |
+   | `OPENROUTER_MODEL` | Optional | Default `openai/gpt-4.1-mini` |
+   | `OPENROUTER_SITE_URL` | Optional | `HTTP-Referer` attribution. Defaults to your Vercel production URL. |
+   | `OPENROUTER_APP_NAME` | Optional | `X-Title` attribution. Default `WrenchWhiz` |
+   | `LLM_TIMEOUT_MS` | Optional | AI request timeout before falling back to the knowledge base. Default `45000` |
+
+3. Deploy. Check `https://<your-app>.vercel.app/api/health`: it should report `"ai": {"enabled": true, ...}`.
+
+Running locally is unchanged: `npm start` serves the API and the built frontend on port 5180.
+
 ## Roadmap / v2
 
 - 🧩 **Interactive car visuals:** a clickable diagram or 3D model of your vehicle that shows where parts are (battery, air filter, oil drain plug, brake calipers), highlighted while you follow a guide.
