@@ -32,7 +32,7 @@ const providers = {
     complete(opts) {
       const extraHeaders = {
         'HTTP-Referer': process.env.OPENROUTER_SITE_URL || 'http://localhost:5180',
-        'X-Title': process.env.OPENROUTER_APP_NAME || 'Motorlingo',
+        'X-Title': process.env.OPENROUTER_APP_NAME || 'WrenchWhiz',
       };
       return openAICompatible({ label: 'OpenRouter', baseUrl: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1', key: this.key(), model: this.model(), extraHeaders }, opts);
     },

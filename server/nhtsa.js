@@ -12,7 +12,7 @@ async function getJSON(url) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 15000);
   try {
-    const res = await fetch(url, { signal: ctrl.signal, headers: { 'User-Agent': 'Motorlingo-demo/1.0' } });
+    const res = await fetch(url, { signal: ctrl.signal, headers: { 'User-Agent': 'WrenchWhiz-demo/1.0' } });
     if (!res.ok) throw new Error(`NHTSA ${res.status} for ${url}`);
     const v = await res.json();
     cache.set(url, { t: Date.now(), v });

@@ -1,8 +1,8 @@
 {
-  "name": "motorlingo",
+  "name": "wrenchwhiz",
   "version": "1.0.0",
   "private": true,
-  "description": "Motorlingo - learn your car's language. A car repair companion for beginners and DIYers",
+  "description": "WrenchWhiz - your car, explained. A car repair companion for beginners and DIYers",
   "type": "module",
   "scripts": {
     "start": "vite build && node server/index.js",
@@ -32,6 +32,6 @@
   "author": "Naman Gupta",
   "repository": {
     "type": "git",
-    "url": "https://github.com/namanagp/motorlingo"
+    "url": "https://github.com/namanagp/wrenchwhiz"
   }
 }

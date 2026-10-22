@@ -75,7 +75,7 @@ export default function App() {
         <header className="topbar"><Brand />{ModeToggle}</header>
         <main className="landing-main">
           <section className="hero">
-            <p className="eyebrow">Learn your car's language</p>
+            <p className="eyebrow">Your car, explained</p>
             <h1>Know your car.<br /><span className="grad">Skip the upsell.</span></h1>
             <p className="hero-sub">Pick your car and get a maintenance schedule, a symptom checker, step-by-step DIY guides, fair price ranges and a mechanic you can ask anything, all tuned to your exact year, make and model.</p>
           </section>
@@ -136,7 +136,7 @@ function Brand({ onClick }) {
   return (
     <button className="brand" onClick={onClick}>
       <img src="/favicon.svg" alt="" width="30" height="30" />
-      <span>Motor<span className="grad">lingo</span></span>
+      <span>Wrench<span className="grad">Whiz</span></span>
     </button>
   );
 }
